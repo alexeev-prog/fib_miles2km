@@ -10,6 +10,9 @@ int main(int argc, char **argv) {
     int help_flag = 0;
     char* fib_value = NULL;
     char* basic_value = NULL;
+    char* fib_interp_value = NULL;
+    char* fib_cache_value = NULL;
+    char* fib_golden_value = NULL;
 
     struct CommandOption options[] = {
         {
@@ -21,7 +24,7 @@ int main(int argc, char **argv) {
             .handler = &help_flag
         },
         {
-            .help = "Convert miles to km using Fibonacci (1-93 miles)",
+            .help = "Convert miles to km using basic Fibonacci",
             .long_name = "fib",
             .short_name = 'f',
             .has_arg = 1,
@@ -35,12 +38,36 @@ int main(int argc, char **argv) {
             .has_arg = 1,
             .default_value = NULL,
             .handler = &basic_value
+        },
+        {
+            .help = "Convert using Fibonacci interpolation",
+            .long_name = "fib-interp",
+            .short_name = 'i',
+            .has_arg = 1,
+            .default_value = NULL,
+            .handler = &fib_interp_value
+        },
+        {
+            .help = "Convert using cached Fibonacci",
+            .long_name = "fib-cache",
+            .short_name = 'c',
+            .has_arg = 1,
+            .default_value = NULL,
+            .handler = &fib_cache_value
+        },
+        {
+            .help = "Convert using golden ratio",
+            .long_name = "fib-golden",
+            .short_name = 'g',
+            .has_arg = 1,
+            .default_value = NULL,
+            .handler = &fib_golden_value
         }
     };
 
     struct CLIMetadata meta = {
         .prog_name = argv[0],
-        .description = "Distance converter: miles to kilometers",
+        .description = "Advanced distance converter: miles to kilometers",
         .usage_args = "[distance]",
         .options = options,
         .options_count = sizeof(options) / sizeof(options[0])
@@ -56,42 +83,84 @@ int main(int argc, char **argv) {
         return EXIT_SUCCESS;
     }
 
-    if (fib_value && basic_value) {
-        fprintf(stderr, "Error: Cannot use both --fib and --basic options simultaneously\n");
+    // Check for conflicts
+    int fib_methods_count = 0;
+    if (fib_value) fib_methods_count++;
+    if (fib_interp_value) fib_methods_count++;
+    if (fib_cache_value) fib_methods_count++;
+    if (fib_golden_value) fib_methods_count++;
+
+    if (fib_methods_count > 1) {
+        fprintf(stderr, "Error: Use only one Fibonacci conversion method\n");
+        return EXIT_FAILURE;
+    }
+    if (basic_value && fib_methods_count > 0) {
+        fprintf(stderr, "Error: Cannot combine basic and Fibonacci conversions\n");
         return EXIT_FAILURE;
     }
 
+    // Handle --fib
     if (fib_value) {
         char* endptr;
-        long miles = strtol(fib_value, &endptr, 10);
-
-        if (*endptr != '\0' || miles <= 0) {
-            fprintf(stderr, "Error: Invalid distance value '%s'. Must be positive integer.\n", fib_value);
+        double miles = strtod(fib_value, &endptr);
+        if (*endptr != '\0' || miles < 0) {
+            fprintf(stderr, "Error: Invalid distance value '%s'\n", fib_value);
             return EXIT_FAILURE;
         }
 
-        if (miles > 93) {
-            fprintf(stderr, "Error: Distance too large. Maximum supported value is 93 miles.\n");
-            return EXIT_FAILURE;
-        }
-
-        uint64_t fib_result = fibonacci(miles + 1);
-
-        if (fib_result == 0 && miles != 0) {
-            fprintf(stderr, "Error: Fibonacci calculation failed\n");
-            return EXIT_FAILURE;
-        }
-
-        printf("%ld miles = %" PRIu64 " km (using Fibonacci)\n", miles, fib_result);
+        uint64_t km = fib_interpolate(miles);
+        printf("%.2f miles ≈ %" PRIu64 " km (Fibonacci)\n", miles, km);
         return EXIT_SUCCESS;
     }
 
+    // Handle --fib-interp
+    if (fib_interp_value) {
+        char* endptr;
+        float miles = strtof(fib_interp_value, &endptr);
+        if (*endptr != '\0' || miles < 0) {
+            fprintf(stderr, "Error: Invalid distance value '%s'\n", fib_interp_value);
+            return EXIT_FAILURE;
+        }
+
+        float km = fib_interpolate(miles);
+        printf("%.2f miles ≈ %.2f km (Fibonacci interpolation)\n", miles, km);
+        return EXIT_SUCCESS;
+    }
+
+    // Handle --fib-cache
+    if (fib_cache_value) {
+        char* endptr;
+        float miles = strtof(fib_cache_value, &endptr);
+        if (*endptr != '\0' || miles < 0) {
+            fprintf(stderr, "Error: Invalid distance value '%s'\n", fib_cache_value);
+            return EXIT_FAILURE;
+        }
+
+        float km = fib_cache_convert(miles);
+        printf("%.2f miles ≈ %.2f km (Cached Fibonacci)\n", miles, km);
+        return EXIT_SUCCESS;
+    }
+
+    // Handle --fib-golden
+    if (fib_golden_value) {
+        char* endptr;
+        float miles = strtof(fib_golden_value, &endptr);
+        if (*endptr != '\0' || miles < 0) {
+            fprintf(stderr, "Error: Invalid distance value '%s'\n", fib_golden_value);
+            return EXIT_FAILURE;
+        }
+
+        float km = fib_golden_ratio(miles);
+        printf("%.2f miles ≈ %.2f km (Golden Ratio)\n", miles, km);
+        return EXIT_SUCCESS;
+    }
+
+    // Handle --basic
     if (basic_value) {
         char* endptr;
         double miles = strtod(basic_value, &endptr);
-
         if (*endptr != '\0' || miles < 0) {
-            fprintf(stderr, "Error: Invalid distance value '%s'. Must be non-negative number.\n", basic_value);
+            fprintf(stderr, "Error: Invalid distance value '%s'\n", basic_value);
             return EXIT_FAILURE;
         }
 
@@ -100,6 +169,7 @@ int main(int argc, char **argv) {
         return EXIT_SUCCESS;
     }
 
+    // Handle positional arguments
     if (pos_index < argc) {
         for (int i = pos_index; i < argc; i++) {
             char* endptr;
@@ -116,6 +186,7 @@ int main(int argc, char **argv) {
         return EXIT_SUCCESS;
     }
 
+    // No arguments provided
     print_help(&meta);
     return EXIT_SUCCESS;
 }
