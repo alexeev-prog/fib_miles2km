@@ -158,14 +158,14 @@ int main(int argc, char **argv) {
     // Handle --basic
     if (basic_value) {
         char* endptr;
-        double miles = strtod(basic_value, &endptr);
+        float miles = strtod(basic_value, &endptr);
         if (*endptr != '\0' || miles < 0) {
             fprintf(stderr, "Error: Invalid distance value '%s'\n", basic_value);
             return EXIT_FAILURE;
         }
 
         float km = basic_miles2km(miles);
-        printf("%.2f miles = %.2f km\n", miles, km);
+        printf("%f miles = %f km\n", miles, km);
         return EXIT_SUCCESS;
     }
 
