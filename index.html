@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fib_miles2km | Advanced Distance Conversion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #121212;
+            --accent: #00ff9d;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --border: #333;
+            --terminal-bg: #1e1e1e;
+            --card-bg: #1a1a1a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 157, 0.03) 0%, transparent 15%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 157, 0.03) 0%, transparent 15%);
+            background-attachment: fixed;
+        }
+        
+        .terminal-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 157, 0.05) 0%, rgba(10, 10, 10, 0) 70%);
+            z-index: -1;
+            animation: rotate 30s linear infinite;
+        }
+        
+        .hero-content {
+            max-width: 700px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            font-weight: 600;
+        }
+        
+        .hero h1 span {
+            color: var(--accent);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 1px solid var(--accent);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg-primary);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--accent);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 157, 0.2);
+        }
+        
+        /* Terminal Section */
+        .terminal-section {
+            background-color: var(--terminal-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 5rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+        }
+        
+        .terminal-header {
+            background-color: #333;
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-button:nth-child(1) {
+            background-color: #ff5f56;
+        }
+        
+        .terminal-button:nth-child(2) {
+            background-color: #ffbd2e;
+        }
+        
+        .terminal-button:nth-child(3) {
+            background-color: #27c93f;
+        }
+        
+        .terminal-body {
+            padding: 2rem;
+            overflow-x: auto;
+        }
+        
+        .terminal-code {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        
+        .terminal-code .prompt {
+            color: var(--accent);
+        }
+        
+        .terminal-code .command {
+            color: #64b5f6;
+        }
+        
+        .terminal-code .output {
+            color: var(--text-secondary);
+        }
+        
+        .terminal-code .keyword {
+            color: #ff79c6;
+        }
+        
+        .terminal-code .type {
+            color: #bd93f9;
+        }
+        
+        .terminal-code .number {
+            color: #bd93f9;
+        }
+        
+        .terminal-code .comment {
+            color: #6272a4;
+        }
+        
+        .terminal-code .conditional {
+            color: #ff79c6;
+        }
+        
+        .terminal-code .loop {
+            color: #ff79c6;
+        }
+        
+        .terminal-code .function {
+            color: #50fa7b;
+        }
+        
+        /* Section Styling */
+        section {
+            padding: 6rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 1rem auto 0;
+        }
+        
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card:hover:before {
+            opacity: 0.1;
+        }
+        
+        .card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Math Section */
+        .math-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .math-formula {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            font-size: 1.2rem;
+            line-height: 2;
+        }
+        
+        .math-formula .variable {
+            color: #64b5f6;
+        }
+        
+        .math-formula .operator {
+            color: var(--accent);
+        }
+        
+        .math-formula .constant {
+            color: #ff79c6;
+        }
+        
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            font-size: 0.95rem;
+        }
+        
+        .comparison-table th {
+            background-color: var(--card-bg);
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        /* Algorithm Visualization */
+        .algorithm-visualization {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .algorithm-step {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .algorithm-step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-color: var(--accent);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+        
+        .visualization-canvas {
+            width: 100%;
+            height: 200px;
+            background-color: #1a1a1a;
+            border-radius: 4px;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fib-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            transform: translate(-50%, -50%);
+        }
+        
+        .fib-line {
+            position: absolute;
+            height: 2px;
+            background-color: #64b5f6;
+            transform-origin: left center;
+        }
+        
+        .fib-label {
+            position: absolute;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Math Visualization */
+        .math-visualization {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .visualization-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .golden-spiral {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+        }
+        
+        .spiral-segment {
+            position: absolute;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+        }
+        
+        .error-chart {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #444;
+        }
+        
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 10px;
+            background-color: var(--accent);
+            transition: height 0.5s ease;
+        }
+        
+        /* Performance Meter */
+        .performance-meter {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+        
+        .meter-item {
+            flex: 1;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .meter-bar {
+            height: 8px;
+            background-color: #333;
+            border-radius: 4px;
+            margin-top: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .meter-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: var(--accent);
+            width: 0;
+            transition: width 1s ease-out;
+        }
+        
+        .meter-label {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 4rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+        
+        /* Animations */
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .math-container, .math-visualization {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .performance-meter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo terminal-font">fib_miles2km</div>
+                <div class="nav-links">
+                    <a href="#about">About</a>
+                    <a href="#math">Math</a>
+                    <a href="#implementation">Implementation</a>
+                    <a href="#cli">CLI</a>
+                    <a href="#performance">Performance</a>
+                    <a href="https://github.com/alexeev-prog/fib_miles2km" target="_blank">GitHub</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Advanced Distance Conversion Using <span>Fibonacci Mathematics</span></h1>
+                <p>A sophisticated command-line utility converting miles to kilometers using the mathematical properties of the Fibonacci sequence and the golden ratio.</p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/alexeev-prog/fib_miles2km" target="_blank" class="btn btn-primary terminal-font">View on GitHub</a>
+                    <a href="#cli" class="btn btn-outline terminal-font">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Project Overview</h2>
+                <p>An educational demonstration of mathematical concepts applied to practical computation problems</p>
+            </div>
+            
+            <div class="cards">
+                <div class="card animate-on-scroll">
+                    <div class="card-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Mathematical Insight</h3>
+                    <p>The project leverages the proximity between the golden ratio (φ ≈ 1.618034) and the exact miles-to-kilometers conversion factor (1.609344).</p>
+                    <p class="terminal-font">Relative error: ~0.54%</p>
+                </div>
+                
+                <div class="card animate-on-scroll">
+                    <div class="card-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3>Algorithmic Approaches</h3>
+                    <p>Three distinct implementations explore computational strategies: iterative Fibonacci with interpolation, cached Fibonacci conversion, and golden ratio conversion.</p>
+                    <p class="terminal-font">O(1) to O(log φ(n)) complexity</p>
+                </div>
+                
+                <div class="card animate-on-scroll">
+                    <div class="card-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <h3>Systems Programming</h3>
+                    <p>Built with C for performance and low-level control, with careful attention to error handling, integer overflow protection, and floating-point precision.</p>
+                    <p class="terminal-font">POSIX-style CLI parser</p>
+                </div>
+            </div>
+            
+            <div class="math-visualization animate-on-scroll">
+                <div class="visualization-card">
+                    <h3>Golden Ratio Spiral</h3>
+                    <div class="golden-spiral">
+                        <div class="spiral-segment" style="width: 100%; height: 100%; border-color: #00ff9d;"></div>
+                        <div class="spiral-segment" style="width: 61.8%; height: 61.8%; top: 19.1%; left: 19.1%; border-color: #64b5f6;"></div>
+                        <div class="spiral-segment" style="width: 38.2%; height: 38.2%; top: 30.9%; left: 30.9%; border-color: #ff79c6;"></div>
+                        <div class="spiral-segment" style="width: 23.6%; height: 23.6%; top: 38.2%; left: 38.2%; border-color: #bd93f9;"></div>
+                        <div class="spiral-segment" style="width: 14.6%; height: 14.6%; top: 42.7%; left: 42.7%; border-color: #ffb86c;"></div>
+                    </div>
+                </div>
+                
+                <div class="visualization-card">
+                    <h3>Conversion Error Distribution</h3>
+                    <div class="error-chart">
+                        <div class="chart-line"></div>
+                        <div class="chart-bar" style="left: 10%; height: 45%;"></div>
+                        <div class="chart-bar" style="left: 20%; height: 20%;"></div>
+                        <div class="chart-bar" style="left: 30%; height: 35%;"></div>
+                        <div class="chart-bar" style="left: 40%; height: 55%;"></div>
+                        <div class="chart-bar" style="left: 50%; height: 40%;"></div>
+                        <div class="chart-bar" style="left: 60%; height: 25%;"></div>
+                        <div class="chart-bar" style="left: 70%; height: 60%;"></div>
+                        <div class="chart-bar" style="left: 80%; height: 30%;"></div>
+                        <div class="chart-bar" style="left: 90%; height: 50%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Math Section -->
+    <section id="math" style="background-color: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Mathematical Foundations</h2>
+                <p>Connecting abstract mathematics to practical computation</p>
+            </div>
+            
+            <div class="math-container">
+                <div class="animate-on-scroll">
+                    <h3>Fibonacci Sequence</h3>
+                    <div class="math-formula terminal-font">
+                        F<sub>0</sub> = <span class="constant">0</span><br>
+                        F<sub>1</sub> = <span class="constant">1</span><br>
+                        F<sub>n</sub> = F<sub>n-1</sub> <span class="operator">+</span> F<sub>n-2</sub> <span class="operator">for</span> n ≥ <span class="constant">2</span><br><br>
+                        <span class="output">0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144,...</span>
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">Golden Ratio</h3>
+                    <div class="math-formula terminal-font">
+                        φ = <span class="operator">lim</span> (n→∞) F<sub>n+1</sub>/F<sub>n</sub> = (<span class="constant">1</span> + √<span class="constant">5</span>)/<span class="constant">2</span> ≈ <span class="constant">1.618034</span>
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">Binet's Formula</h3>
+                    <div class="math-formula terminal-font">
+                        F<sub>n</sub> = (φ<sup>n</sup> - (-φ)<sup>-n</sup>) / √<span class="constant">5</span>
+                    </div>
+                </div>
+                
+                <div class="animate-on-scroll">
+                    <h3>Conversion Relationship</h3>
+                    <div class="math-formula terminal-font">
+                        <span class="operator">1 mile = 1.609344 kilometers</span><br><br>
+                        <span class="operator">Relative error:</span><br>
+                        (<span class="variable">φ</span> - <span class="constant">1.609344</span>) / <span class="constant">1.609344</span> × <span class="constant">100</span>% ≈ <span class="constant">0.54</span>%
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">Linear Interpolation</h3>
+                    <div class="math-formula terminal-font">
+                        km = F<sub>k+1</sub> + (miles - F<sub>k</sub>) × <br>
+                        (F<sub>k+2</sub> - F<sub>k+1</sub>) / (F<sub>k+1</sub> - F<sub>k</sub>)
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">Error Propagation</h3>
+                    <div class="math-formula terminal-font">
+                        ε<sub>rel</sub> = |(F<sub>k+1</sub>/F<sub>k</sub> - φ) + (φ - 1.609344)/1.609344|
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Implementation Section -->
+    <section id="implementation">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Algorithmic Implementations</h2>
+                <p>Three distinct approaches with unique computational characteristics</p>
+            </div>
+            
+            <div class="terminal-section animate-on-scroll">
+                <div class="terminal-header">
+                    <div class="terminal-button"></div>
+                    <div class="terminal-button"></div>
+                    <div class="terminal-button"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-code">
+                        <div class="terminal-code-line">
+                            <span class="prompt">$</span> <span class="command">cat algorithms.c</span>
+                        </div>
+                        <br>
+                        <span class="comment">// Iterative Fibonacci with Interpolation</span><br>
+                        <span class="keyword">float</span> <span class="function">fib_interpolate</span>(<span class="keyword">float</span> miles) {<br>
+                        &nbsp;&nbsp;<span class="conditional">if</span> (miles &lt; <span class="number">5.0f</span>) <span class="conditional">return</span> basic_miles2km(miles);<br><br>
+                        &nbsp;&nbsp;<span class="type">uint64_t</span> prev_mile = <span class="number">0</span>;   <span class="comment">// F₀</span><br>
+                        &nbsp;&nbsp;<span class="type">uint64_t</span> prev_km = <span class="number">1</span>;     <span class="comment">// F₁</span><br>
+                        &nbsp;&nbsp;<span class="type">uint64_t</span> curr_mile = <span class="number">1</span>;   <span class="comment">// F₁</span><br>
+                        &nbsp;&nbsp;<span class="type">uint64_t</span> curr_km = <span class="number">1</span>;     <span class="comment">// F₂</span><br><br>
+                        &nbsp;&nbsp;<span class="loop">while</span> (curr_mile &lt;= miles) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="type">uint64_t</span> next_mile = curr_km;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="type">uint64_t</span> next_km = prev_km + curr_km;<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="conditional">if</span> (next_km &lt; curr_km) <span class="conditional">break</span>; <span class="comment">// Overflow protection</span><br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;prev_mile = curr_mile;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;prev_km = curr_km;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;curr_mile = next_mile;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;curr_km = next_km;<br>
+                        &nbsp;&nbsp;}<br><br>
+                        &nbsp;&nbsp;<span class="conditional">return</span> prev_km + (miles - prev_mile) *<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((<span class="keyword">float</span>)(curr_km - prev_km) / (curr_mile - prev_mile));<br>
+                        }<br>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="algorithm-visualization animate-on-scroll">
+                <div class="algorithm-step">
+                    <div class="algorithm-step-header">
+                        <div class="step-number">1</div>
+                        <h3>Fibonacci Sequence Generation</h3>
+                    </div>
+                    <p>Compute Fibonacci pairs until current mile value exceeds input</p>
+                    <div class="visualization-canvas" id="fib-sequence-canvas">
+                        <div class="fib-point" style="top: 50%; left: 10%;" data-value="0"></div>
+                        <div class="fib-point" style="top: 50%; left: 20%;" data-value="1"></div>
+                        <div class="fib-point" style="top: 50%; left: 30%;" data-value="1"></div>
+                        <div class="fib-point" style="top: 50%; left: 40%;" data-value="2"></div>
+                        <div class="fib-point" style="top: 50%; left: 50%;" data-value="3"></div>
+                        <div class="fib-point" style="top: 50%; left: 60%;" data-value="5"></div>
+                        <div class="fib-point" style="top: 50%; left: 70%;" data-value="8"></div>
+                        <div class="fib-point" style="top: 50%; left: 80%;" data-value="13"></div>
+                        <div class="fib-point" style="top: 50%; left: 90%;" data-value="21"></div>
+                        
+                        <div class="fib-line" style="left: 10%; width: 10%; transform: rotate(0deg);"></div>
+                        <div class="fib-line" style="left: 20%; width: 10%; transform: rotate(0deg);"></div>
+                        <div class="fib-line" style="left: 30%; width: 10%; transform: rotate(0deg);"></div>
+                        <div class="fib-line" style="left: 40%; width: 10%; transform: rotate(0deg);"></div>
+                        <div class="fib-line" style="left: 50%; width: 10%; transform: rotate(0deg);"></div>
+                        <div class="fib-line" style="left: 60%; width: 10%; transform: rotate(0deg);"></div>
+                        <div class="fib-line" style="left: 70%; width: 10%; transform: rotate(0deg);"></div>
+                        <div class="fib-line" style="left: 80%; width: 10%; transform: rotate(0deg);"></div>
+                        
+                        <div class="fib-label" style="top: 70%; left: 10%;">F₀=0</div>
+                        <div class="fib-label" style="top: 70%; left: 20%;">F₁=1</div>
+                        <div class="fib-label" style="top: 70%; left: 30%;">F₂=1</div>
+                        <div class="fib-label" style="top: 70%; left: 40%;">F₃=2</div>
+                        <div class="fib-label" style="top: 70%; left: 50%;">F₄=3</div>
+                        <div class="fib-label" style="top: 70%; left: 60%;">F₅=5</div>
+                        <div class="fib-label" style="top: 70%; left: 70%;">F₆=8</div>
+                        <div class="fib-label" style="top: 70%; left: 80%;">F₇=13</div>
+                        <div class="fib-label" style="top: 70%; left: 90%;">F₈=21</div>
+                    </div>
+                </div>
+                
+                <div class="algorithm-step">
+                    <div class="algorithm-step-header">
+                        <div class="step-number">2</div>
+                        <h3>Interval Identification</h3>
+                    </div>
+                    <p>Locate the Fibonacci pair bracketing the input value</p>
+                    <div class="visualization-canvas" id="interval-canvas">
+                        <div class="fib-point" style="top: 50%; left: 30%; background-color: #64b5f6;" data-value="5"></div>
+                        <div class="fib-point" style="top: 50%; left: 50%; background-color: #ff79c6;" data-value="10"></div>
+                        <div class="fib-point" style="top: 50%; left: 70%; background-color: #64b5f6;" data-value="13"></div>
+                        
+                        <div class="fib-line" style="left: 30%; width: 20%; background-color: #ff79c6; height: 2px; top: 50%;"></div>
+                        <div class="fib-line" style="left: 50%; width: 20%; background-color: #64b5f6; height: 2px; top: 50%;"></div>
+                        
+                        <div class="fib-label" style="top: 30%; left: 30%; color: #64b5f6;">Fₖ=5</div>
+                        <div class="fib-label" style="top: 30%; left: 50%; color: #ff79c6;">Input=10</div>
+                        <div class="fib-label" style="top: 30%; left: 70%; color: #64b5f6;">Fₖ₊₁=13</div>
+                    </div>
+                </div>
+                
+                <div class="algorithm-step">
+                    <div class="algorithm-step-header">
+                        <div class="step-number">3</div>
+                        <h3>Linear Interpolation</h3>
+                    </div>
+                    <p>Calculate the proportional distance between Fibonacci points</p>
+                    <div class="visualization-canvas" id="interpolation-canvas">
+                        <div class="fib-point" style="top: 30%; left: 20%; background-color: #64b5f6;" data-value="5"></div>
+                        <div class="fib-point" style="top: 30%; left: 80%; background-color: #64b5f6;" data-value="13"></div>
+                        <div class="fib-point" style="top: 70%; left: 20%; background-color: #ff79c6;" data-value="8"></div>
+                        <div class="fib-point" style="top: 70%; left: 80%; background-color: #ff79c6;" data-value="21"></div>
+                        
+                        <div class="fib-line" style="left: 20%; width: 60%; top: 30%;"></div>
+                        <div class="fib-line" style="left: 20%; width: 60%; top: 70%;"></div>
+                        
+                        <div class="fib-line" style="left: 20%; top: 30%; height: 40%; width: 2px;"></div>
+                        <div class="fib-line" style="left: 50%; top: 30%; height: 40%; width: 2px; background-color: #ff79c6;"></div>
+                        <div class="fib-line" style="left: 80%; top: 30%; height: 40%; width: 2px;"></div>
+                        
+                        <div class="fib-label" style="top: 25%; left: 20%;">Fₖ=5</div>
+                        <div class="fib-label" style="top: 25%; left: 80%;">Fₖ₊₁=13</div>
+                        <div class="fib-label" style="top: 75%; left: 20%;">Fₖ₊₁=8</div>
+                        <div class="fib-label" style="top: 75%; left: 80%;">Fₖ₊₂=21</div>
+                        <div class="fib-label" style="top: 50%; left: 50%; color: #ff79c6;">km = 8 + (10-5) × (21-8)/(13-5) ≈ 16.125</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cards">
+                <div class="card animate-on-scroll">
+                    <h3><i class="fas fa-bolt"></i> Iterative Fibonacci</h3>
+                    <p>Dynamically computes Fibonacci numbers until bracketing the input value. Uses 64-bit integers for precision with overflow protection.</p>
+                    <p class="terminal-font">Time: O(log φ(miles)) | Space: O(1)</p>
+                    <p><strong>Key Insight:</strong> As n increases, the ratio F<sub>n+1</sub>/F<sub>n</sub> approaches φ, enabling approximation.</p>
+                </div>
+                
+                <div class="card animate-on-scroll">
+                    <h3><i class="fas fa-database"></i> Cached Conversion</h3>
+                    <p>Precomputes Fibonacci numbers up to F₉₃ (max before 64-bit overflow). Uses static cache for single initialization with constant-time lookup.</p>
+                    <p class="terminal-font">Time: O(1) | Space: O(94)</p>
+                    <p><strong>Optimization:</strong> Cache is initialized on first function call, minimizing startup overhead.</p>
+                </div>
+                
+                <div class="card animate-on-scroll">
+                    <h3><i class="fas fa-calculator"></i> Golden Ratio</h3>
+                    <p>Direct implementation of Binet's closed-form formula. Uses logarithmic calculation to find Fibonacci index with floating-point precision.</p>
+                    <p class="terminal-font">Time: O(1) | Space: O(1)</p>
+                    <p><strong>Precision Note:</strong> Double precision maintains accuracy until ~F₇₀ (1e14 miles).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLI Section -->
+    <section id="cli" style="background-color: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Command-Line Interface</h2>
+                <p>POSIX-style option processing with conflict detection and validation</p>
+            </div>
+            
+            <div class="terminal-section animate-on-scroll">
+                <div class="terminal-header">
+                    <div class="terminal-button"></div>
+                    <div class="terminal-button"></div>
+                    <div class="terminal-button"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-code">
+                        <div class="terminal-code-line">
+                            <span class="prompt">$</span> <span class="command">./fib_miles2km --help</span>
+                        </div>
+                        <div class="output">
+                            Advanced distance converter: miles to kilometers<br>
+                            Usage: ./fib_miles2km [OPTIONS] [distance]<br><br>
+                            Options:<br>
+                              -h, --help              Show help information<br>
+                              -f, --fib=ARG           Convert using basic Fibonacci<br>
+                              -b, --basic=ARG         Convert using standard formula<br>
+                              -i, --fib-interp=ARG    Convert using Fibonacci interpolation<br>
+                              -c, --fib-cache=ARG     Convert using cached Fibonacci<br>
+                              -g, --fib-golden=ARG    Convert using golden ratio
+                        </div>
+                        <br>
+                        <div class="terminal-code-line">
+                            <span class="prompt">$</span> <span class="command">./fib_miles2km --fib-interp 21</span>
+                        </div>
+                        <div class="output">
+                            21.00 miles ≈ 34.00 km (Fibonacci interpolation)
+                        </div>
+                        <br>
+                        <div class="terminal-code-line">
+                            <span class="prompt">$</span> <span class="command">./fib_miles2km --fib-golden 55.3</span>
+                        </div>
+                        <div class="output">
+                            55.30 miles ≈ 89.11 km (Golden Ratio)
+                        </div>
+                        <br>
+                        <div class="terminal-code-line">
+                            <span class="prompt">$</span> <span class="command">./fib_miles2km 100</span>
+                        </div>
+                        <div class="output">
+                            100.00 miles = 160.93 km
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cards animate-on-scroll">
+                <div class="card">
+                    <h3><i class="fas fa-code"></i> Parser Architecture</h3>
+                    <p>The command parser implements a robust POSIX-style option processing system with:</p>
+                    <ul style="padding-left: 1.5rem; margin-top: 1rem; color: var(--text-secondary);">
+                        <li>Conflict detection between conversion methods</li>
+                        <li>Input validation for distance values</li>
+                        <li>Comprehensive error reporting</li>
+                        <li>Default fallback to standard conversion</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-shield-alt"></i> Error Handling</h3>
+                    <p>Comprehensive checks include:</p>
+                    <ul style="padding-left: 1.5rem; margin-top: 1rem; color: var(--text-secondary);">
+                        <li>Invalid numeric inputs</li>
+                        <li>Negative distance values</li>
+                        <li>Conflicting conversion methods</li>
+                        <li>Integer overflow protection</li>
+                        <li>Floating-point underflow/overflow</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section id="performance">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Performance Characteristics</h2>
+                <p>Algorithm selection tradeoffs for different use cases</p>
+            </div>
+            
+            <table class="comparison-table animate-on-scroll">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Max Input (miles)</th>
+                        <th>Precision</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="terminal-font">Basic</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>∞</td>
+                        <td class="highlight">Exact</td>
+                        <td>General purpose</td>
+                    </tr>
+                    <tr>
+                        <td class="terminal-font">Interpolation</td>
+                        <td>O(log φ(n))</td>
+                        <td>O(1)</td>
+                        <td class="terminal-font">F₉₂ ≈ 7.5e19</td>
+                        <td class="highlight">~0.54% error</td>
+                        <td>Mathematical demonstration</td>
+                    </tr>
+                    <tr>
+                        <td class="terminal-font">Cached</td>
+                        <td>O(1)</td>
+                        <td>O(94)</td>
+                        <td class="terminal-font">F₉₂ ≈ 7.5e19</td>
+                        <td class="highlight">~0.54% error</td>
+                        <td>Repeated conversions</td>
+                    </tr>
+                    <tr>
+                        <td class="terminal-font">Golden Ratio</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>∞</td>
+                        <td class="highlight">Degrades with n</td>
+                        <td>Large values (> F₉₂)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="performance-meter animate-on-scroll">
+                <div class="meter-item">
+                    <h3>Time Efficiency</h3>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="meter-label">Golden Ratio: 100%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 98%;"></div>
+                    </div>
+                    <div class="meter-label">Cached: 98%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 95%;"></div>
+                    </div>
+                    <div class="meter-label">Basic: 95%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 85%;"></div>
+                    </div>
+                    <div class="meter-label">Interpolation: 85%</div>
+                </div>
+                
+                <div class="meter-item">
+                    <h3>Memory Efficiency</h3>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="meter-label">Golden Ratio: 100%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="meter-label">Basic: 100%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 95%;"></div>
+                    </div>
+                    <div class="meter-label">Interpolation: 95%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 90%;"></div>
+                    </div>
+                    <div class="meter-label">Cached: 90%</div>
+                </div>
+                
+                <div class="meter-item">
+                    <h3>Precision</h3>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="meter-label">Basic: 100%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 99.46%;"></div>
+                    </div>
+                    <div class="meter-label">Cached: 99.46%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 99.46%;"></div>
+                    </div>
+                    <div class="meter-label">Interpolation: 99.46%</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 98%;"></div>
+                    </div>
+                    <div class="meter-label">Golden Ratio: 98%</div>
+                </div>
+            </div>
+            
+            <div class="cards" style="margin-top: 4rem;">
+                <div class="card animate-on-scroll">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Limitations</h3>
+                    <ul style="padding-left: 1.5rem; color: var(--text-secondary); margin-top: 1rem;">
+                        <li>Golden ratio precision limited by double-precision floating point (53-bit mantissa)</li>
+                        <li>Maximum input F₉₃ ≈ 7.5e19 miles for integer-based methods</li>
+                        <li>Linear interpolation assumes constant ratio between Fibonacci points</li>
+                        <li>No SIMD or multi-threading optimization</li>
+                    </ul>
+                </div>
+                
+                <div class="card animate-on-scroll">
+                    <h3><i class="fas fa-lightbulb"></i> Future Work</h3>
+                    <ul style="padding-left: 1.5rem; color: var(--text-secondary); margin-top: 1rem;">
+                        <li>Arbitrary-precision arithmetic using GMP</li>
+                        <li>Hybrid algorithmic approaches combining methods</li>
+                        <li>Error correction with machine learning models</li>
+                        <li>WebAssembly port for browser execution</li>
+                        <li>Formal error distribution analysis</li>
+                        <li>AVX-512 vectorization for cache initialization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="logo terminal-font" style="font-size: 2rem; margin-bottom: 1rem;">fib_miles2km</div>
+            <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+                Combining mathematical foundations with practical C implementation to demonstrate core software engineering principles: DRY, KISS, Robustness, and Efficiency.
+            </p>
+            
+            <div class="social-links">
+                <a href="https://github.com/alexeev-prog" target="_blank" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://github.com/alexeev-prog/fib_miles2km" target="_blank" title="Repository">
+                    <i class="fas fa-code-branch"></i>
+                </a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 Alexeev Bronislav. Released under MIT License.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Animate performance bars
+                        if (entry.target.classList.contains('performance-meter')) {
+                            setTimeout(() => {
+                                const fills = document.querySelectorAll('.meter-fill');
+                                fills.forEach(fill => {
+                                    const width = fill.style.width;
+                                    fill.style.width = '0';
+                                    setTimeout(() => {
+                                        fill.style.width = width;
+                                    }, 100);
+                                });
+                            }, 300);
+                        }
+                        
+                        // Animate chart bars
+                        if (entry.target.id === 'math') {
+                            setTimeout(() => {
+                                const bars = document.querySelectorAll('.chart-bar');
+                                bars.forEach(bar => {
+                                    const height = bar.style.height;
+                                    bar.style.height = '0';
+                                    setTimeout(() => {
+                                        bar.style.height = height;
+                                    }, 100);
+                                });
+                            }, 300);
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            document.querySelectorAll('.animate-on-scroll').forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Initialize visualization points
+            const points = document.querySelectorAll('.fib-point');
+            points.forEach(point => {
+                point.style.opacity = '0';
+                setTimeout(() => {
+                    point.style.transition = 'opacity 0.5s ease';
+                    point.style.opacity = '1';
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

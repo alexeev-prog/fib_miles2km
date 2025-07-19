@@ -1,5 +1,28 @@
 # fib_miles2km: Advanced Distance Conversion Using Fibonacci Mathematics
 
+## Usage
+
+```
+Advanced distance converter: miles to kilometers
+Usage: ./bin/fib_miles2km [OPTIONS] [distance]
+
+Options:
+  -h, --help                     Show help information
+  -f, --fib=ARG                  Convert miles to km using basic Fibonacci
+  -b, --basic=ARG                Convert miles to km using standard formula
+  -i, --fib-interp=ARG           Convert using Fibonacci interpolation
+  -c, --fib-cache=ARG            Convert using cached Fibonacci
+  -g, --fib-golden=ARG           Convert using golden ratio
+```
+
+## Install
+
+```bash
+git clone https://github.com/alexeev-prog/fib_miles2km
+cd fib_miles2km
+make
+```
+
 ## Technical Overview
 
 This project implements a sophisticated distance converter that transforms miles to kilometers using mathematical properties of the Fibonacci sequence and the golden ratio. The primary purpose is educational: to demonstrate how abstract mathematical concepts can be applied to practical computation problems while exploring different implementation strategies in C.
