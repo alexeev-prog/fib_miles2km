@@ -1,3 +1,15 @@
+commit 42931939fa300bcaa33143e89cb72c8574116668
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jul 19 20:53:46 2025 +0700
+
+    small codestyle changes
+
+commit 3ad2464c0d4a2086e0f189a4e30573aa8462f39a
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jul 19 19:54:13 2025 +0700
+
+    update readme
+
 commit 144d55530af97485736d2949294aa614af5d5f17
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sat Jul 19 19:28:32 2025 +0700

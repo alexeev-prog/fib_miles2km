@@ -253,6 +253,7 @@ gcc -Wall -Wextra -O2 -lm src/*.c -o bin/fib_miles2km
 
 ### Output Samples
 ```
+21.00 miles = 33.80 km (Basic convert)
 21.00 miles ≈ 34.00 km (Fibonacci interpolation)
 34.70 miles ≈ 55.82 km (Cached Fibonacci)
 55.30 miles ≈ 89.11 km (Golden Ratio)
