@@ -1,5 +1,9 @@
 # fib_miles2km: Advanced Distance Conversion Using Fibonacci Mathematics
 
+Thanks to contributors:
+
+ + [vitaliy-chernyshov](https://github.com/vitaliy-chernyshov)
+
 ## Usage
 
 ```
