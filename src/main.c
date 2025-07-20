@@ -1,3 +1,6 @@
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "algorithms.h"
 #include "cmdparser.h"
 #include <inttypes.h>
@@ -7,6 +10,9 @@
 #include <string.h>
 
 int main(int argc, char **argv) {
+  #ifdef _WIN32
+  SetConsoleOutputCP(CP_UTF8);
+  #endif
   int help_flag = 0;
   char *fib_value = NULL;
   char *basic_value = NULL;
