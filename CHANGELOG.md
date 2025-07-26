@@ -1,3 +1,9 @@
+commit 730a70c4ce5ef353523db2bc4ae357bb7dd7864b
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Mon Jul 21 03:48:08 2025 +0700
+
+    update readme
+
 commit 783288f19f5b3c74fd6cd38d7bab4c6aa9f8d1d3
 Merge: d57def0 b80ca50
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
