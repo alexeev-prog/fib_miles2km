@@ -1,3 +1,15 @@
+commit 933a2a824e9cc59b5b91d13e2b523adff6b18573
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Thu Jul 31 10:38:09 2025 +0700
+
+    fix bug
+
+commit 32fb296908cd3230a3bc84e8c9577ff0c6e60752
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Thu Jul 31 10:36:23 2025 +0700
+
+    fix code style and bug
+
 commit 281d4a716c95594a3d6da7a1164077c4b9ac8ee9
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sat Jul 26 18:18:06 2025 +0700
